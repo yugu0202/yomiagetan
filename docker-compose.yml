@@ -1,9 +1,11 @@
 version: '3'
 services:
-  python3:
+  bot:
     build: .
-    container_name: 'python3'
+    container_name: 'bot'
     working_dir: '/root/'
     tty: true
     env_file:
       - variables.env
+    volumes:
+      - ./settings.json:/settings.json
