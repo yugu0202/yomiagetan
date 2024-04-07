@@ -1,0 +1,9 @@
+version: '3'
+services:
+  python3:
+    build: .
+    container_name: 'python3'
+    working_dir: '/root/'
+    tty: true
+    env_file:
+      - variables.env
