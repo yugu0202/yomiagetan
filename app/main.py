@@ -21,13 +21,13 @@ async def on_ready():
 
 @bot.event
 async def on_message(message):
+  if message.author.id == bot.user.id:
+    return
+
   with open(json_path, "r") as f:
     settings = json.load(f)
 
-  if message.channel.id in settings["track_channel_ids"]:
-    if message.author.id == bot.user.id:
-      return
-
+  if message.channel.id in settings[message.guild.id]["track_channel_ids"] and message.content.startswith("!"):
     if message.attachments:
       for attachment in message.attachments:
         if attachment.filename.endswith(".wav"):
@@ -50,7 +50,6 @@ async def on_message(message):
     voice_client.play(discord.FFmpegPCMAudio("temp.wav"))
 
   await bot.process_commands(message)
-
 
 
 @bot.command()
@@ -84,9 +83,9 @@ async def track(ctx, *, text: str):
   with open(json_path, "r") as f:
     settings = json.load(f)
 
-  tci = settings["track_channel_ids"]
+  tci = settings[ctx.guild.id]["track_channel_ids"]
   tci.append(channel.id)
-  settings["track_channel_ids"] = tci
+  settings[ctx.guild.id]["track_channel_ids"] = tci
 
   with open(json_path, "w") as f:
     json.dump(settings, f)
