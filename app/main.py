@@ -18,6 +18,16 @@ speaker_id = 68 #あいえるたん
 async def on_ready():
   print(f"Logged in as {bot.user}")
 
+@bot.event
+async def on_guild_join(guild):
+  with open(json_path, "r") as f:
+    settings = json.load(f)
+
+  settings[guild.id] = {"track_channel_ids": []}
+
+  with open(json_path, "w") as f:
+    json.dump(settings, f)
+
 
 @bot.event
 async def on_message(message):
