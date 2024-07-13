@@ -96,6 +96,7 @@ async def track(ctx, *, text: str):
 
   track_channel_ids = settings[ctx.guild.id]["track_channel_ids"] if settings.get(ctx.guild.id) else []
   track_channel_ids.append(channel.id)
+  settings[ctx.guild.id] = {}
   settings[ctx.guild.id]["track_channel_ids"] = track_channel_ids
 
   with open(json_path, "w") as f:
