@@ -37,7 +37,8 @@ async def on_message(message):
   with open(json_path, "r") as f:
     settings = json.load(f)
 
-  if message.channel.id in settings[message.guild.id]["track_channel_ids"] and message.content.startswith("!"):
+  track_channel_ids = settings[message.guild.id]["track_channel_ids"] if settings.get(message.guild.id) else []
+  if message.channel.id in track_channel_ids and not message.content.startswith("!"):
     if message.attachments:
       for attachment in message.attachments:
         if attachment.filename.endswith(".wav"):
@@ -93,9 +94,9 @@ async def track(ctx, *, text: str):
   with open(json_path, "r") as f:
     settings = json.load(f)
 
-  tci = settings[ctx.guild.id]["track_channel_ids"]
-  tci.append(channel.id)
-  settings[ctx.guild.id]["track_channel_ids"] = tci
+  track_channel_ids = settings[message.guild.id]["track_channel_ids"] if settings.get(message.guild.id) else []
+  track_channel_ids.append(channel.id)
+  settings[ctx.guild.id]["track_channel_ids"] = track_channel_ids
 
   with open(json_path, "w") as f:
     json.dump(settings, f)
